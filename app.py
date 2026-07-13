@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-st.set_page_config(page_title="Laptop Price Prediction", page_icon="💻", layout="centered")
+st.set_page_config(page_title="Laptop Price Prediction", page_icon="💻", layout="wide")
 
 # =====================================================
 # Theme state (Dark / Light toggle)
@@ -49,6 +49,12 @@ st.markdown(f"""
     }}
     html, body, [class*="css"] {{
         font-family: 'Segoe UI', 'Inter', sans-serif;
+    }}
+    .block-container {{
+        max-width: 1200px;
+        padding-top: 2rem;
+        padding-left: 3rem;
+        padding-right: 3rem;
     }}
 
     /* ---------- Header ---------- */
@@ -237,55 +243,46 @@ gpu_models = ['Iris Xe', 'RTX 3050', 'RX 6600', 'RTX 3080', 'RX 6700', 'RTX 3060
 usage_types = ['Professional', 'Basic', 'Student', 'High-End Gaming']
 
 # =====================================================
-# Section 1: Spesifikasi Umum
+# Section 1-3: Spesifikasi Umum, Hardware, Performance Score
+# (disusun 3 kolom sejajar agar memanfaatkan layout wide)
 # =====================================================
-st.markdown('<div class="section-card">', unsafe_allow_html=True)
-st.markdown('<div class="section-title">🧾 Spesifikasi Umum</div>', unsafe_allow_html=True)
+sec1, sec2, sec3 = st.columns(3)
 
-col1, col2 = st.columns(2)
-with col1:
+with sec1:
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">🧾 Spesifikasi Umum</div>', unsafe_allow_html=True)
     country = st.selectbox("Country", countries)
     brand = st.selectbox("Laptop Brand", brands)
     st.markdown(f'<span class="brand-icon-tag">{BRAND_ICONS.get(brand, "💻")} {brand}</span>', unsafe_allow_html=True)
     model_name = st.selectbox("Laptop Model", models_)
     cpu_brand = st.selectbox("CPU Brand", cpu_brands)
     st.markdown(f'<span class="brand-icon-tag">{CPU_ICONS.get(cpu_brand, "🧠")} {cpu_brand} CPU</span>', unsafe_allow_html=True)
-with col2:
     gpu_brand = st.selectbox("GPU Brand", gpu_brands)
     st.markdown(f'<span class="brand-icon-tag">{GPU_ICONS.get(gpu_brand, "🎮")} {gpu_brand} GPU</span>', unsafe_allow_html=True)
     gpu_model = st.selectbox("GPU Model", gpu_models)
     usage = st.selectbox("Usage Type", usage_types)
-st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# =====================================================
-# Section 2: Spesifikasi Hardware
-# =====================================================
-st.markdown('<div class="section-card">', unsafe_allow_html=True)
-st.markdown('<div class="section-title">⚙️ Spesifikasi Hardware</div>', unsafe_allow_html=True)
-
-col1, col2 = st.columns(2)
-with col1:
+with sec2:
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">⚙️ Spesifikasi Hardware</div>', unsafe_allow_html=True)
     ram = st.number_input("RAM (GB)", min_value=2, max_value=128, value=16, step=2)
     storage = st.number_input("Storage (GB)", min_value=64, max_value=8000, value=512, step=64)
     cores = st.number_input("CPU Cores", min_value=2, max_value=64, value=8)
     threads = st.number_input("CPU Threads", min_value=2, max_value=128, value=16)
-with col2:
     base_clock = st.number_input("Base Clock (GHz)", min_value=0.5, max_value=6.0, value=2.5, step=0.1)
     boost_clock = st.number_input("Boost Clock (GHz)", min_value=0.5, max_value=6.5, value=4.0, step=0.1)
     tdp = st.number_input("TDP (Watt)", min_value=5, max_value=250, value=65)
-st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# =====================================================
-# Section 3: Performance Score
-# =====================================================
-st.markdown('<div class="section-card">', unsafe_allow_html=True)
-st.markdown('<div class="section-title">📊 Performance Score</div>', unsafe_allow_html=True)
-
-cpu_perf = st.slider("CPU Performance", min_value=0, max_value=200, value=80)
-gpu_perf = st.slider("GPU Performance", min_value=0, max_value=200, value=80)
-total_perf = cpu_perf + gpu_perf
-st.caption(f"Total Performance (otomatis dihitung) = **{total_perf}**")
-st.markdown('</div>', unsafe_allow_html=True)
+with sec3:
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">📊 Performance Score</div>', unsafe_allow_html=True)
+    cpu_perf = st.slider("CPU Performance", min_value=0, max_value=200, value=80)
+    gpu_perf = st.slider("GPU Performance", min_value=0, max_value=200, value=80)
+    total_perf = cpu_perf + gpu_perf
+    st.caption(f"Total Performance (otomatis dihitung) = **{total_perf}**")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # =====================================================
 # Predict button + hasil
