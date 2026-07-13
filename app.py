@@ -51,10 +51,10 @@ st.markdown(f"""
         font-family: 'Segoe UI', 'Inter', sans-serif;
     }}
     .block-container {{
-        max-width: 1200px;
+        max-width: 900px;
         padding-top: 2rem;
-        padding-left: 3rem;
-        padding-right: 3rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
     }}
 
     /* ---------- Header ---------- */
@@ -219,12 +219,28 @@ def load_model():
 model = load_model()
 
 # =====================================================
+# Sidebar — Info Model & Dataset
+# =====================================================
+with st.sidebar:
+    st.markdown("### 📊 Akurasi Model")
+    st.markdown("**Algoritma**")
+    st.write("Linear Regression Pipeline")
+    st.markdown("**Preprocessing**")
+    st.write("OneHotEncoder + StandardScaler")
+    st.divider()
+    st.markdown("### 🗂️ Informasi Dataset")
+    st.write("📁 Dataset: Laptop specs & price")
+    st.write("🎓 Final Project ML — AMIKOM Yogyakarta")
+    st.divider()
+    st.caption("Dibuat oleh Chanan Artamma · GitHub: Chanan1")
+
+# =====================================================
 # Header
 # =====================================================
 st.markdown("""
 <div class="app-header">
     <h1>💻 Laptop Price Prediction</h1>
-    <p>Masukkan spesifikasi laptop untuk memprediksi harga (USD)</p>
+    <p>Dapatkan estimasi harga laptop secara instan berdasarkan spesifikasi yang kamu masukkan.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -243,51 +259,63 @@ gpu_models = ['Iris Xe', 'RTX 3050', 'RX 6600', 'RTX 3080', 'RX 6700', 'RTX 3060
 usage_types = ['Professional', 'Basic', 'Student', 'High-End Gaming']
 
 # =====================================================
-# Section 1-3: Spesifikasi Umum, Hardware, Performance Score
-# (disusun 3 kolom sejajar agar memanfaatkan layout wide)
+# Section 1: Identitas & Penggunaan
 # =====================================================
-sec1, sec2, sec3 = st.columns(3)
-
-with sec1:
-    st.markdown('<div class="section-card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">🧾 Spesifikasi Umum</div>', unsafe_allow_html=True)
-    country = st.selectbox("Country", countries)
-    brand = st.selectbox("Laptop Brand", brands)
+st.markdown('<div class="section-card">', unsafe_allow_html=True)
+st.markdown('<div class="section-title">🏷️ Identitas & Penggunaan</div>', unsafe_allow_html=True)
+c1, c2 = st.columns(2)
+with c1:
+    brand = st.selectbox("Merek Laptop", brands)
     st.markdown(f'<span class="brand-icon-tag">{BRAND_ICONS.get(brand, "💻")} {brand}</span>', unsafe_allow_html=True)
-    model_name = st.selectbox("Laptop Model", models_)
-    cpu_brand = st.selectbox("CPU Brand", cpu_brands)
-    st.markdown(f'<span class="brand-icon-tag">{CPU_ICONS.get(cpu_brand, "🧠")} {cpu_brand} CPU</span>', unsafe_allow_html=True)
-    gpu_brand = st.selectbox("GPU Brand", gpu_brands)
-    st.markdown(f'<span class="brand-icon-tag">{GPU_ICONS.get(gpu_brand, "🎮")} {gpu_brand} GPU</span>', unsafe_allow_html=True)
-    gpu_model = st.selectbox("GPU Model", gpu_models)
-    usage = st.selectbox("Usage Type", usage_types)
-    st.markdown('</div>', unsafe_allow_html=True)
+    model_name = st.selectbox("Seri/Model", models_)
+with c2:
+    usage = st.selectbox("Tujuan Penggunaan", usage_types)
+    country = st.selectbox("Negara Pasar", countries)
+st.markdown('</div>', unsafe_allow_html=True)
 
-with sec2:
-    st.markdown('<div class="section-card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">⚙️ Spesifikasi Hardware</div>', unsafe_allow_html=True)
-    ram = st.number_input("RAM (GB)", min_value=2, max_value=128, value=16, step=2)
-    storage = st.number_input("Storage (GB)", min_value=64, max_value=8000, value=512, step=64)
-    cores = st.number_input("CPU Cores", min_value=2, max_value=64, value=8)
-    threads = st.number_input("CPU Threads", min_value=2, max_value=128, value=16)
-    base_clock = st.number_input("Base Clock (GHz)", min_value=0.5, max_value=6.0, value=2.5, step=0.1)
-    boost_clock = st.number_input("Boost Clock (GHz)", min_value=0.5, max_value=6.5, value=4.0, step=0.1)
-    tdp = st.number_input("TDP (Watt)", min_value=5, max_value=250, value=65)
-    st.markdown('</div>', unsafe_allow_html=True)
+# =====================================================
+# Section 2: Spesifikasi Inti
+# =====================================================
+st.markdown('<div class="section-card">', unsafe_allow_html=True)
+st.markdown('<div class="section-title">⚡ Spesifikasi Inti</div>', unsafe_allow_html=True)
+c1, c2 = st.columns(2)
+with c1:
+    cpu_brand = st.selectbox("Merek CPU", cpu_brands)
+    st.markdown(f'<span class="brand-icon-tag">{CPU_ICONS.get(cpu_brand, "🧠")} {cpu_brand}</span>', unsafe_allow_html=True)
+    gpu_brand = st.selectbox("Merek GPU", gpu_brands)
+    st.markdown(f'<span class="brand-icon-tag">{GPU_ICONS.get(gpu_brand, "🎮")} {gpu_brand}</span>', unsafe_allow_html=True)
+with c2:
+    ram = st.slider("Kapasitas RAM (GB)", min_value=4, max_value=64, value=16, step=2)
+    storage = st.slider("Kapasitas Storage (GB)", min_value=128, max_value=2048, value=512, step=64)
+st.markdown('</div>', unsafe_allow_html=True)
 
-with sec3:
-    st.markdown('<div class="section-card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">📊 Performance Score</div>', unsafe_allow_html=True)
+# =====================================================
+# Section 3 (Expander): Spesifikasi Teknis Lanjutan
+# =====================================================
+with st.expander("🔧 Spesifikasi Teknis Lanjutan (Klik untuk membuka)"):
+    c1, c2 = st.columns(2)
+    with c1:
+        gpu_model = st.selectbox("GPU Model", gpu_models)
+        cores = st.number_input("CPU Cores", min_value=2, max_value=64, value=8)
+        threads = st.number_input("CPU Threads", min_value=2, max_value=128, value=16)
+    with c2:
+        base_clock = st.number_input("Base Clock (GHz)", min_value=0.5, max_value=6.0, value=2.5, step=0.1)
+        boost_clock = st.number_input("Boost Clock (GHz)", min_value=0.5, max_value=6.5, value=4.0, step=0.1)
+        tdp = st.number_input("TDP (Watt)", min_value=5, max_value=250, value=65)
+
+# =====================================================
+# Section 4 (Expander): Performance Score
+# =====================================================
+with st.expander("📈 Skor Performa (Benchmark)"):
     cpu_perf = st.slider("CPU Performance", min_value=0, max_value=200, value=80)
     gpu_perf = st.slider("GPU Performance", min_value=0, max_value=200, value=80)
     total_perf = cpu_perf + gpu_perf
     st.caption(f"Total Performance (otomatis dihitung) = **{total_perf}**")
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # =====================================================
 # Predict button + hasil
 # =====================================================
-predict_clicked = st.button("🔮 Predict Price", type="primary")
+predict_clicked = st.button("🧮 Hitung Estimasi Harga", type="primary")
 
 if predict_clicked:
     input_df = pd.DataFrame([{
