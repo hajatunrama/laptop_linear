@@ -232,7 +232,7 @@ with st.sidebar:
     st.write("📁 Dataset: Laptop specs & price")
     st.write("🎓 Final Project ML — AMIKOM Yogyakarta")
     st.divider()
-    st.caption("Dibuat oleh Chanan Artamma · GitHub: Chanan1")
+    st.caption("Dibuat oleh Abdul Hajatun · GitHub: hajatunrama")
 
 # =====================================================
 # Header
